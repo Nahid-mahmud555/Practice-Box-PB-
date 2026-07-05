@@ -1,710 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Practice Box [ PB ] • Premium Varsity Practice</title>
-  <!-- Google Fonts: Inter & Plus Jakarta Sans (fallback) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style id="app-styles">
-    /* style.css content injected for single‑file portability, but keeping concept clean */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    :root {
-      --font-primary: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-      --border-radius-card: 2.5rem;
-      --border-radius-btn: 2rem;
-      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --glass-blur: blur(18px);
-      --glass-bg-light: rgba(255, 255, 255, 0.65);
-      --glass-bg-dark: rgba(20, 20, 30, 0.7);
-      --shadow-3d-light: 0 20px 35px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.05);
-      --shadow-3d-dark: 0 20px 35px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.4);
-      --accent-glow-light: 0 0 18px rgba(99, 102, 241, 0.5);
-      --accent-glow-dark: 0 0 22px rgba(56, 189, 248, 0.7);
-      --text-primary-light: #0b0f1c;
-      --text-secondary-light: #334155;
-      --text-primary-dark: #f1f5f9;
-      --text-secondary-dark: #cbd5e1;
-    }
-    body {
-      font-family: var(--font-body);
-      background: radial-gradient(circle at 30% 10%, #e0e7ff, #cbd5e1);
-      background-attachment: fixed;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      margin: 0;
-      transition: background 0.4s ease, color 0.3s ease;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    body.dark-mode {
-      background: radial-gradient(circle at 40% 20%, #1e1b4b, #0f172a);
-    }
-    .app-wrapper {
-      width: 100%;
-      max-width: 950px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.8rem;
-    }
-    /* ---------- HEADER ---------- */
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.2rem;
-      background: var(--glass-bg-light);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-radius: 3.5rem;
-      padding: 1rem 2rem;
-      box-shadow: var(--shadow-3d-light);
-      border: 1px solid rgba(255,255,255,0.5);
-      transition: var(--transition-smooth);
-    }
-    body.dark-mode .header {
-      background: var(--glass-bg-dark);
-      border-color: rgba(255,255,255,0.1);
-      box-shadow: var(--shadow-3d-dark);
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .logo-box {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      border-radius: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.5rem;
-      color: white;
-      letter-spacing: -0.5px;
-      box-shadow: 0 12px 25px -8px rgba(99,102,241,0.7);
-      transform-style: preserve-3d;
-      transform: translateZ(10px) rotateY(0deg);
-      transition: transform 0.4s ease;
-      font-family: var(--font-primary);
-    }
-    .logo-box:hover {
-      transform: translateZ(14px) rotateY(5deg) scale(1.05);
-    }
-    .brand-title {
-      font-family: var(--font-primary);
-      font-weight: 700;
-      font-size: 1.8rem;
-      letter-spacing: -0.5px;
-      background: linear-gradient(to right, #1e293b, #0f172a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    body.dark-mode .brand-title {
-      background: linear-gradient(to right, #e2e8f0, #f8fafc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-    }
-    .select-3d {
-      position: relative;
-      display: flex;
-      align-items: center;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 3rem;
-      padding: 0.5rem 1.2rem;
-      border: 1px solid rgba(255,255,255,0.8);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.04);
-      transition: var(--transition-smooth);
-    }
-    body.dark-mode .select-3d {
-      background: rgba(30,30,40,0.7);
-      border-color: rgba(255,255,255,0.15);
-    }
-    .select-3d select {
-      background: transparent;
-      border: none;
-      font-family: var(--font-primary);
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #0f172a;
-      outline: none;
-      cursor: pointer;
-      appearance: none;
-      padding-right: 1.8rem;
-    }
-    body.dark-mode .select-3d select {
-      color: #f1f5f9;
-    }
-    .select-3d::after {
-      content: "⌄";
-      position: absolute;
-      right: 1rem;
-      font-size: 1.2rem;
-      color: #6366f1;
-      pointer-events: none;
-    }
-    /* theme toggle */
-    .theme-toggle-btn {
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(12px);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.5rem;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.1);
-      transition: var(--transition-smooth);
-      transform: translateZ(5px);
-    }
-    body.dark-mode .theme-toggle-btn {
-      background: rgba(40,40,55,0.7);
-      box-shadow: 0 10px 18px rgba(0,0,0,0.5);
-    }
-    /* ---------- DASHBOARD CARD ---------- */
-    .dashboard-card {
-      background: var(--glass-bg-light);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-radius: var(--border-radius-card);
-      padding: 1.8rem 2.2rem;
-      box-shadow: var(--shadow-3d-light);
-      border: 1px solid rgba(255,255,255,0.6);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      transition: var(--transition-smooth);
-    }
-    body.dark-mode .dashboard-card {
-      background: var(--glass-bg-dark);
-      box-shadow: var(--shadow-3d-dark);
-      border-color: rgba(255,255,255,0.1);
-    }
-    .progress-area {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      flex: 2;
-    }
-    .progress-label {
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.3px;
-      color: var(--text-secondary-light);
-    }
-    body.dark-mode .progress-label {
-      color: var(--text-secondary-dark);
-    }
-    .progress-bar-bg {
-      height: 14px;
-      background: rgba(203,213,225,0.5);
-      border-radius: 20px;
-      overflow: hidden;
-      width: 100%;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #6366f1, #8b5cf6);
-      border-radius: 20px;
-      box-shadow: 0 0 14px #6366f1;
-      transition: width 0.4s ease;
-    }
-    .score-badge {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 3rem;
-      padding: 0.8rem 2rem;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: #1e293b;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    body.dark-mode .score-badge {
-      background: rgba(20,20,30,0.7);
-      color: #f8fafc;
-    }
-    /* ---------- QUIZ CONTAINER ---------- */
-    .quiz-glass {
-      background: var(--glass-bg-light);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-radius: var(--border-radius-card);
-      padding: 2.2rem;
-      box-shadow: var(--shadow-3d-light);
-      border: 1px solid rgba(255,255,255,0.55);
-      transition: var(--transition-smooth);
-    }
-    body.dark-mode .quiz-glass {
-      background: var(--glass-bg-dark);
-      border-color: rgba(255,255,255,0.12);
-      box-shadow: var(--shadow-3d-dark);
-    }
-    .question-text {
-      font-family: var(--font-primary);
-      font-weight: 650;
-      font-size: 1.7rem;
-      line-height: 1.4;
-      margin-bottom: 2rem;
-      color: #0f172a;
-    }
-    body.dark-mode .question-text {
-      color: #f1f5f9;
-    }
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2rem;
-    }
-    .option-btn {
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.9);
-      padding: 1.2rem 1rem;
-      border-radius: 1.8rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #1e293b;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.04);
-      transform: translateY(0) translateZ(0);
-      text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .option-btn:hover:not(:disabled) {
-      transform: translateY(-4px) translateZ(10px);
-      box-shadow: 0 20px 28px rgba(99,102,241,0.3);
-      border-color: #a5b4fc;
-    }
-    .option-btn.correct-glow {
-      background: #10b981;
-      color: white;
-      border-color: #047857;
-      box-shadow: 0 0 24px #10b981;
-      transform: translateY(-3px);
-    }
-    .option-btn.incorrect-glow {
-      background: #ef4444;
-      color: white;
-      border-color: #b91c1c;
-      box-shadow: 0 0 24px #ef4444;
-      transform: translateY(-3px);
-    }
-    .explanation-banner {
-      background: rgba(241,245,249,0.8);
-      backdrop-filter: blur(16px);
-      border-radius: 1.5rem;
-      padding: 1rem 1.5rem;
-      margin: 1.5rem 0 1rem;
-      font-weight: 500;
-      color: #1e293b;
-      border-left: 5px solid #6366f1;
-      transition: all 0.3s;
-    }
-    body.dark-mode .explanation-banner {
-      background: rgba(30,30,45,0.8);
-      color: #e2e8f0;
-    }
-    .short-input-area {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      margin: 1.2rem 0;
-    }
-    .glass-textarea {
-      width: 100%;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.8);
-      border-radius: 1.8rem;
-      padding: 1.2rem;
-      font-family: var(--font-body);
-      font-size: 1rem;
-      resize: vertical;
-      color: #0f172a;
-      outline: none;
-      transition: var(--transition-smooth);
-    }
-    body.dark-mode .glass-textarea {
-      background: rgba(15,15,25,0.7);
-      color: #f1f5f9;
-      border-color: rgba(255,255,255,0.2);
-    }
-    .show-answer-btn {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border: none;
-      padding: 0.9rem 2rem;
-      border-radius: 2.5rem;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 12px 22px rgba(99,102,241,0.5);
-      transition: var(--transition-smooth);
-      align-self: flex-start;
-    }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    .nav-btn {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
-      border: none;
-      padding: 0.9rem 2.2rem;
-      border-radius: 2.8rem;
-      font-weight: 700;
-      color: #1e293b;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-      transition: var(--transition-smooth);
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    .nav-btn:hover:not(:disabled) {
-      transform: translateY(-3px) translateZ(8px);
-      box-shadow: 0 18px 28px rgba(99,102,241,0.4);
-    }
-    body.dark-mode .nav-btn {
-      background: rgba(40,40,55,0.7);
-      color: #f1f5f9;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Practice Box [PB] — A premium varsity practice application for CSE, EEE and BBA students." />
+<title>Practice Box [ PB ]</title>
+
+<!-- Fonts: Plus Jakarta Sans (display) + Inter (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Stylesheet -->
+<link rel="stylesheet" href="style.css" />
+
+<!-- Supabase CDN (UMD build — exposes window.supabase) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
-<body class="light-mode">
-  <div class="app-wrapper">
-    <!-- HEADER -->
-    <header class="header">
-      <div class="brand">
-        <div class="logo-box">PB</div>
-        <span class="brand-title">Practice Box</span>
+<body>
+
+  <!-- Ambient animated background -->
+  <div class="aurora-bg" aria-hidden="true">
+    <span class="aurora-blob blob-1"></span>
+    <span class="aurora-blob blob-2"></span>
+    <span class="aurora-blob blob-3"></span>
+    <span class="grain-overlay"></span>
+  </div>
+
+  <div class="app-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="app-header glass">
+      <div class="brand" title="Practice Box">
+        <div class="logo-box" aria-hidden="true">
+          <span class="logo-face logo-front">PB</span>
+          <span class="logo-face logo-glow"></span>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Practice Box</h1>
+          <span class="brand-chip">[ PB ]</span>
+        </div>
       </div>
-      <div class="controls">
-        <div class="select-3d">
-          <select id="departmentSelect">
-            <option value="CSE">CSE</option>
-            <option value="EEE">EEE</option>
-            <option value="BBA">BBA</option>
-          </select>
+
+      <div class="header-controls">
+
+        <div class="field-group">
+          <label class="field-label" for="departmentSelect">Department</label>
+          <div class="select-3d">
+            <select id="departmentSelect">
+              <option value="CSE">CSE</option>
+              <option value="EEE">EEE</option>
+              <option value="BBA">BBA</option>
+            </select>
+            <svg class="select-caret" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
         </div>
-        <div class="select-3d">
-          <select id="semesterSelect">
-            <option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option>
-            <option value="4">4th</option><option value="5">5th</option><option value="6">6th</option>
-            <option value="7">7th</option><option value="8" selected>8th</option>
-          </select>
+
+        <div class="field-group">
+          <label class="field-label" for="semesterSelect">Semester</label>
+          <div class="select-3d">
+            <select id="semesterSelect">
+              <option value="1">1st Semester</option>
+              <option value="2">2nd Semester</option>
+              <option value="3">3rd Semester</option>
+              <option value="4">4th Semester</option>
+              <option value="5">5th Semester</option>
+              <option value="6">6th Semester</option>
+              <option value="7">7th Semester</option>
+              <option value="8">8th Semester</option>
+            </select>
+            <svg class="select-caret" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
         </div>
-        <button id="themeToggle" class="theme-toggle-btn" aria-label="Switch theme">🌓</button>
+
+        <button id="loadBtn" class="btn-3d btn-primary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" class="btn-icon"><path d="M4 4v6h6M20 20v-6h-6M4.5 15a8 8 0 0014.9 3.3M19.5 9A8 8 0 004.6 5.7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Start Practice</span>
+        </button>
+
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle light and dark theme" aria-pressed="false">
+          <span class="toggle-track">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+
       </div>
     </header>
 
-    <!-- Dashboard -->
-    <div class="dashboard-card">
-      <div class="progress-area">
-        <span class="progress-label" id="progressText">Question 0 of 100</span>
-        <div class="progress-bar-bg">
-          <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
-        </div>
-      </div>
-      <div class="score-badge">
-        <span>🏆</span> <span id="scoreDisplay">0</span>
-      </div>
-    </div>
+    <!-- ============ MAIN ============ -->
+    <main class="app-main">
 
-    <!-- Quiz Container -->
-    <main class="quiz-glass" id="quizContainer">
-      <div id="questionDisplay" class="question-text">Loading...</div>
-      <!-- MCQ options -->
-      <div id="mcqOptions" class="options-grid"></div>
-      <!-- Short question area -->
-      <div id="shortQuestionArea" class="short-input-area hidden">
-        <textarea id="shortAnswerInput" class="glass-textarea" rows="4" placeholder="Type your practice answer..."></textarea>
-        <button id="showAnswerButton" class="show-answer-btn">✨ Show Answer</button>
-        <div id="shortAnswerReveal" class="explanation-banner hidden"></div>
-      </div>
-      <!-- Explanation banner (MCQ) -->
-      <div id="mcqExplanation" class="explanation-banner hidden"></div>
-      
-      <div class="nav-buttons">
-        <button id="prevButton" class="nav-btn" disabled>← Previous</button>
-        <button id="nextButton" class="nav-btn">Next →</button>
-      </div>
+      <!-- Dashboard -->
+      <section class="dashboard-card glass" aria-label="Practice progress dashboard">
+        <div class="dashboard-row">
+          <div class="progress-info">
+            <span class="q-pill" id="qTypeBadge">MCQ</span>
+            <p class="q-count">Question <span id="currentQNum">0</span> of <span id="totalQNum">0</span></p>
+          </div>
+          <div class="score-counter" title="Correct answers out of total MCQs">
+            <svg class="score-ring" viewBox="0 0 64 64">
+              <circle class="ring-track" cx="32" cy="32" r="27"></circle>
+              <circle class="ring-fill" id="scoreRingFill" cx="32" cy="32" r="27"></circle>
+            </svg>
+            <div class="score-value">
+              <span id="scoreValue">0</span>
+              <small id="scoreMax">/0</small>
+            </div>
+          </div>
+        </div>
+        <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </section>
+
+      <!-- Quiz Container -->
+      <section class="quiz-container glass" id="quizContainer" aria-label="Practice question">
+
+        <div class="state-panel" id="loadingState">
+          <div class="loader-cube">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <p>Select your department and semester, then start practice.</p>
+        </div>
+
+        <div class="state-panel" id="emptyState" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="state-icon"><path d="M12 9v4M12 16.5h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <p id="emptyStateText">No questions were found for this Department / Semester combination yet.</p>
+        </div>
+
+        <div class="state-panel" id="errorState" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="state-icon"><path d="M12 8v5M12 16.5h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9.3" stroke="currentColor" stroke-width="1.6"/></svg>
+          <p id="errorStateText">Something went wrong while loading questions.</p>
+        </div>
+
+        <div class="quiz-content" id="quizContent" hidden>
+
+          <div class="question-block">
+            <span class="question-index" id="questionIndexLabel">Q1</span>
+            <h2 class="question-text" id="questionText"></h2>
+          </div>
+
+          <!-- MCQ grid -->
+          <div class="mcq-grid" id="mcqGrid" hidden></div>
+
+          <!-- Short answer -->
+          <div class="short-answer-block" id="shortBlock" hidden>
+            <label class="field-label" for="shortInput">Type your answer for practice</label>
+            <textarea id="shortInput" class="glass-input" rows="4" placeholder="Write your answer here — this is just for your own typing practice, it isn't graded automatically…"></textarea>
+
+            <button id="showAnswerBtn" class="btn-3d btn-secondary" type="button">
+              <svg viewBox="0 0 24 24" fill="none" class="btn-icon"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+              <span>Show Answer</span>
+            </button>
+
+            <div class="answer-reveal" id="answerReveal" hidden>
+              <div class="reveal-section">
+                <h3>Model Answer</h3>
+                <p id="correctAnswerText"></p>
+              </div>
+              <div class="reveal-section">
+                <h4>Explanation</h4>
+                <p id="shortExplanationText"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explanation banner for MCQ -->
+          <div class="explanation-banner" id="explanationBanner" hidden>
+            <span class="explanation-tag" id="explanationStatus">Correct</span>
+            <p id="explanationText"></p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <nav class="nav-controls" aria-label="Question navigation">
+        <button id="prevBtn" class="btn-3d btn-nav" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Previous</span>
+        </button>
+
+        <div class="nav-position" id="navPosition">0 / 0</div>
+
+        <button id="nextBtn" class="btn-3d btn-nav" type="button" disabled>
+          <span>Next</span>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </nav>
+
     </main>
+
+    <footer class="app-footer">
+      <p>Practice Box <span class="brand-chip small">[ PB ]</span> — crafted for focused, high-fidelity varsity exam practice.</p>
+    </footer>
+
   </div>
 
-  <script id="app-logic">
-    (function() {
-      // ---------- SUPABASE CONFIG ----------
-      const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-      const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-      
-      // ---------- GLOBAL STATE ----------
-      let supabase;
-      let questions = [];                // unified array of 100 items
-      let currentIndex = 0;
-      let score = 0;
-      let answeredMCQs = new Set();     // track answered indices to prevent multiple clicks
-      let currentFilter = { department: 'CSE', semester: '8' };
-
-      // DOM elements
-      const departmentSelect = document.getElementById('departmentSelect');
-      const semesterSelect = document.getElementById('semesterSelect');
-      const themeToggle = document.getElementById('themeToggle');
-      const body = document.body;
-      const progressText = document.getElementById('progressText');
-      const progressFill = document.getElementById('progressFill');
-      const scoreDisplay = document.getElementById('scoreDisplay');
-      const questionDisplay = document.getElementById('questionDisplay');
-      const mcqOptionsDiv = document.getElementById('mcqOptions');
-      const shortQuestionArea = document.getElementById('shortQuestionArea');
-      const shortAnswerInput = document.getElementById('shortAnswerInput');
-      const showAnswerButton = document.getElementById('showAnswerButton');
-      const shortAnswerReveal = document.getElementById('shortAnswerReveal');
-      const mcqExplanation = document.getElementById('mcqExplanation');
-      const prevButton = document.getElementById('prevButton');
-      const nextButton = document.getElementById('nextButton');
-
-      // ---------- INIT SUPABASE ----------
-      function initSupabase() {
-        if (typeof supabase !== 'undefined' && supabase) return supabase;
-        if (window.supabase && window.supabase.createClient) {
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          return supabase;
-        } else {
-          console.warn('Supabase CDN not ready. Using mock data.');
-          return null;
-        }
-      }
-
-      // ---------- FETCH QUESTIONS ----------
-      async function fetchQuestions(department, semester) {
-        const client = initSupabase();
-        if (!client) {
-          // Fallback mock data for demonstration
-          return generateMockData(department, semester);
-        }
-        try {
-          const [mcqRes, shortRes] = await Promise.all([
-            client.from('practices').select('*').eq('type', 'MCQ').eq('department', department).eq('semester', semester).limit(70),
-            client.from('practices').select('*').eq('type', 'SHORT').eq('department', department).eq('semester', semester).limit(30)
-          ]);
-          if (mcqRes.error || shortRes.error) {
-            console.warn('Supabase error, using mock data');
-            return generateMockData(department, semester);
-          }
-          const mcqs = (mcqRes.data || []).map(q => ({ ...q, type: 'MCQ' }));
-          const shorts = (shortRes.data || []).map(q => ({ ...q, type: 'SHORT' }));
-          return [...mcqs, ...shorts].slice(0, 100);
-        } catch (err) {
-          console.error('Fetch error:', err);
-          return generateMockData(department, semester);
-        }
-      }
-
-      function generateMockData(dept, sem) {
-        const arr = [];
-        for (let i = 1; i <= 70; i++) {
-          arr.push({
-            id: `mcq-${i}`,
-            type: 'MCQ',
-            question: `[${dept} Sem${sem}] MCQ ${i}: What is the principle of operation?`,
-            options: ['Option A: Newtonian', 'Option B: Quantum', 'Option C: Relativity', 'Option D: Classical'],
-            correct_answer: 'Option B: Quantum',
-            explanation: 'Quantum mechanics governs microscopic phenomena.'
-          });
-        }
-        for (let i = 1; i <= 30; i++) {
-          arr.push({
-            id: `short-${i}`,
-            type: 'SHORT',
-            question: `[${dept} Sem${sem}] Short ${i}: Explain the concept of sustainability.`,
-            answer: 'Sustainability meets present needs without compromising future generations.',
-            explanation: 'It balances environmental, social, and economic factors.'
-          });
-        }
-        return arr;
-      }
-
-      // ---------- UI UPDATE ----------
-      function renderQuestion() {
-        if (!questions.length || currentIndex >= questions.length) {
-          questionDisplay.innerText = 'No questions available.';
-          return;
-        }
-        const q = questions[currentIndex];
-        questionDisplay.innerText = q.question || 'Question text';
-        
-        // Reset UI visibility
-        mcqOptionsDiv.innerHTML = '';
-        mcqExplanation.classList.add('hidden');
-        shortQuestionArea.classList.add('hidden');
-        shortAnswerReveal.classList.add('hidden');
-        shortAnswerInput.value = '';
-
-        if (q.type === 'MCQ') {
-          mcqOptionsDiv.classList.remove('hidden');
-          const options = q.options || [];
-          options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.dataset.optionIndex = idx;
-            btn.addEventListener('click', (e) => handleMCQClick(e, q, btn));
-            // if already answered correctly/incorrectly persist visuals
-            if (answeredMCQs.has(currentIndex)) {
-              btn.disabled = true;
-              if (q.correct_answer === opt) {
-                btn.classList.add('correct-glow');
-              } else if (btn.dataset.selected === 'true') {
-                btn.classList.add('incorrect-glow');
-              }
-            }
-            mcqOptionsDiv.appendChild(btn);
-          });
-        } else {
-          // SHORT type
-          shortQuestionArea.classList.remove('hidden');
-          showAnswerButton.onclick = () => {
-            shortAnswerReveal.classList.remove('hidden');
-            shortAnswerReveal.innerHTML = `<strong>✅ Answer:</strong> ${q.answer || 'N/A'}<br><small>${q.explanation || ''}</small>`;
-          };
-        }
-
-        updateProgressAndNav();
-      }
-
-      function handleMCQClick(event, question, buttonElement) {
-        if (answeredMCQs.has(currentIndex)) return;
-        const selectedText = buttonElement.innerText;
-        const isCorrect = (selectedText === question.correct_answer);
-        
-        // Mark answered
-        answeredMCQs.add(currentIndex);
-        
-        // Update score
-        if (isCorrect) {
-          score += 1;
-          buttonElement.classList.add('correct-glow');
-        } else {
-          buttonElement.classList.add('incorrect-glow');
-          // Highlight correct answer
-          Array.from(mcqOptionsDiv.children).forEach(btn => {
-            if (btn.innerText === question.correct_answer) {
-              btn.classList.add('correct-glow');
-            }
-          });
-        }
-        buttonElement.dataset.selected = 'true';
-        // Disable all option buttons
-        Array.from(mcqOptionsDiv.children).forEach(b => b.disabled = true);
-        
-        // Show explanation banner
-        mcqExplanation.classList.remove('hidden');
-        mcqExplanation.innerHTML = `<strong>📘 Explanation:</strong> ${question.explanation || 'No additional explanation.'}`;
-        scoreDisplay.innerText = score;
-      }
-
-      function updateProgressAndNav() {
-        if (!questions.length) return;
-        const total = questions.length;
-        const current = currentIndex + 1;
-        progressText.innerText = `Question ${current} of ${total}`;
-        const percent = (current / total) * 100;
-        progressFill.style.width = `${percent}%`;
-        
-        prevButton.disabled = currentIndex === 0;
-        nextButton.disabled = currentIndex === total - 1;
-        scoreDisplay.innerText = score;
-      }
-
-      function navigate(direction) {
-        if (direction === 'next' && currentIndex < questions.length - 1) {
-          currentIndex++;
-        } else if (direction === 'prev' && currentIndex > 0) {
-          currentIndex--;
-        }
-        renderQuestion();
-      }
-
-      async function reloadQuestions() {
-        const dept = departmentSelect.value;
-        const sem = semesterSelect.value;
-        currentFilter = { department: dept, semester: sem };
-        questions = await fetchQuestions(dept, sem);
-        currentIndex = 0;
-        score = 0;
-        answeredMCQs.clear();
-        renderQuestion();
-      }
-
-      // Theme toggle
-      function toggleTheme() {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        themeToggle.innerText = isDark ? '☀️' : '🌓';
-        localStorage.setItem('practicebox-theme', isDark ? 'dark' : 'light');
-      }
-
-      // Event Listeners
-      departmentSelect.addEventListener('change', reloadQuestions);
-      semesterSelect.addEventListener('change', reloadQuestions);
-      themeToggle.addEventListener('click', toggleTheme);
-      prevButton.addEventListener('click', () => navigate('prev'));
-      nextButton.addEventListener('click', () => navigate('next'));
-
-      // Initial load
-      window.addEventListener('load', async () => {
-        const savedTheme = localStorage.getItem('practicebox-theme');
-        if (savedTheme === 'dark') {
-          body.classList.add('dark-mode');
-          themeToggle.innerText = '☀️';
-        } else {
-          body.classList.remove('dark-mode');
-          themeToggle.innerText = '🌓';
-        }
-        await reloadQuestions();
-      });
-
-    })();
-  </script>
+  <script src="app.js" defer></script>
 </body>
 </html>
