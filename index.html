@@ -1,204 +1,200 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="description" content="Practice Box [PB] — A premium varsity practice application for CSE, EEE and BBA students." />
-<title>Practice Box [ PB ]</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <meta name="description" content="Practice Box [PB] — a premium varsity practice web application for CSE, EEE and BBA students with MCQ and short-question practice modes." />
+  <title>Practice Box [ PB ]</title>
 
-<!-- Fonts: Plus Jakarta Sans (display) + Inter (body) -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
-<!-- Stylesheet -->
-<link rel="stylesheet" href="style.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
 
-<!-- Supabase CDN (UMD build — exposes window.supabase) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- Supabase JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
-  <!-- Ambient animated background -->
-  <div class="aurora-bg" aria-hidden="true">
-    <span class="aurora-blob blob-1"></span>
-    <span class="aurora-blob blob-2"></span>
-    <span class="aurora-blob blob-3"></span>
-    <span class="grain-overlay"></span>
+  <!-- Animated ambient background -->
+  <div class="bg-aurora" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <div class="grid-overlay"></div>
   </div>
 
   <div class="app-shell">
-
-    <!-- ============ HEADER ============ -->
+    <!-- ================= HEADER ================= -->
     <header class="app-header glass">
-      <div class="brand" title="Practice Box">
-        <div class="logo-box" aria-hidden="true">
-          <span class="logo-face logo-front">PB</span>
-          <span class="logo-face logo-glow"></span>
+      <div class="brand">
+        <div class="pb-logo" aria-hidden="true">
+          <span class="pb-logo__text">PB</span>
+          <span class="pb-logo__ring"></span>
         </div>
-        <div class="brand-text">
-          <h1 class="brand-title">Practice Box</h1>
-          <span class="brand-chip">[ PB ]</span>
+        <div class="brand__title">
+          <h1>Practice Box</h1>
+          <span class="brand__tag">[ PB ]</span>
         </div>
       </div>
 
-      <div class="header-controls">
-
-        <div class="field-group">
-          <label class="field-label" for="departmentSelect">Department</label>
-          <div class="select-3d">
-            <select id="departmentSelect">
+      <div class="controls">
+        <div class="select-field">
+          <label for="departmentSelect">Department</label>
+          <div class="select-wrap">
+            <select id="departmentSelect" class="glass-select">
               <option value="CSE">CSE</option>
               <option value="EEE">EEE</option>
               <option value="BBA">BBA</option>
             </select>
-            <svg class="select-caret" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </div>
         </div>
 
-        <div class="field-group">
-          <label class="field-label" for="semesterSelect">Semester</label>
-          <div class="select-3d">
-            <select id="semesterSelect">
-              <option value="1">1st Semester</option>
-              <option value="2">2nd Semester</option>
-              <option value="3">3rd Semester</option>
-              <option value="4">4th Semester</option>
-              <option value="5">5th Semester</option>
-              <option value="6">6th Semester</option>
-              <option value="7">7th Semester</option>
-              <option value="8">8th Semester</option>
+        <div class="select-field">
+          <label for="semesterSelect">Semester</label>
+          <div class="select-wrap">
+            <select id="semesterSelect" class="glass-select">
+              <option value="1">1st</option>
+              <option value="2">2nd</option>
+              <option value="3">3rd</option>
+              <option value="4">4th</option>
+              <option value="5">5th</option>
+              <option value="6">6th</option>
+              <option value="7">7th</option>
+              <option value="8">8th</option>
             </select>
-            <svg class="select-caret" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </div>
         </div>
 
-        <button id="loadBtn" class="btn-3d btn-primary" type="button">
-          <svg viewBox="0 0 24 24" fill="none" class="btn-icon"><path d="M4 4v6h6M20 20v-6h-6M4.5 15a8 8 0 0014.9 3.3M19.5 9A8 8 0 004.6 5.7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Start Practice</span>
-        </button>
-
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle light and dark theme" aria-pressed="false">
-          <span class="toggle-track">
-            <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-            <span class="toggle-thumb"></span>
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          type="button"
+          role="switch"
+          aria-checked="true"
+          aria-label="Toggle light and dark theme"
+        >
+          <span class="theme-toggle__track">
+            <span class="theme-toggle__thumb">
+              <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </span>
           </span>
         </button>
-
       </div>
     </header>
 
-    <!-- ============ MAIN ============ -->
-    <main class="app-main">
-
-      <!-- Dashboard -->
-      <section class="dashboard-card glass" aria-label="Practice progress dashboard">
-        <div class="dashboard-row">
-          <div class="progress-info">
-            <span class="q-pill" id="qTypeBadge">MCQ</span>
-            <p class="q-count">Question <span id="currentQNum">0</span> of <span id="totalQNum">0</span></p>
+    <!-- ================= DASHBOARD ================= -->
+    <section class="dashboard glass" aria-label="Session progress">
+      <div class="dash-block">
+        <span class="dash-label">Progress</span>
+        <div class="progress-row">
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
           </div>
-          <div class="score-counter" title="Correct answers out of total MCQs">
-            <svg class="score-ring" viewBox="0 0 64 64">
-              <circle class="ring-track" cx="32" cy="32" r="27"></circle>
-              <circle class="ring-fill" id="scoreRingFill" cx="32" cy="32" r="27"></circle>
-            </svg>
-            <div class="score-value">
-              <span id="scoreValue">0</span>
-              <small id="scoreMax">/0</small>
-            </div>
+          <span class="progress-text" id="progressText">Question 0 of 0</span>
+        </div>
+      </div>
+
+      <div class="dash-divider" aria-hidden="true"></div>
+
+      <div class="dash-block dash-block--stats">
+        <div class="stat">
+          <span class="dash-label">Score</span>
+          <span class="stat-value" id="scoreValue">0</span>
+        </div>
+        <div class="stat">
+          <span class="dash-label">Type</span>
+          <span class="stat-value stat-value--type" id="typeBadge">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <main class="quiz glass" aria-live="polite">
+      <!-- Loading state -->
+      <div class="state-panel" id="loadingState">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Loading your practice set…</p>
+      </div>
+
+      <!-- Empty / error state -->
+      <div class="state-panel state-panel--hidden" id="messageState">
+        <div class="state-icon" aria-hidden="true">!</div>
+        <p id="messageText">No questions found.</p>
+        <button class="btn btn-ghost" id="retryBtn" type="button">Reload</button>
+      </div>
+
+      <!-- Active question -->
+      <div class="question-view state-panel--hidden" id="questionView">
+        <div class="q-meta">
+          <span class="q-index" id="qIndexBadge">Q1</span>
+          <span class="q-type-pill" id="qTypePill">MCQ</span>
+        </div>
+
+        <h2 class="q-text" id="questionText">Question text goes here.</h2>
+
+        <!-- MCQ options -->
+        <div class="options-grid" id="optionsGrid" hidden></div>
+
+        <!-- Short question -->
+        <div class="short-block" id="shortBlock" hidden>
+          <textarea
+            id="shortInput"
+            class="short-input"
+            rows="4"
+            placeholder="Type your answer here to practice…"
+          ></textarea>
+          <button class="btn btn-primary btn-3d" id="showAnswerBtn" type="button">
+            Show Answer
+          </button>
+          <div class="answer-reveal" id="answerReveal" hidden>
+            <span class="answer-reveal__label">Correct Answer</span>
+            <p class="answer-reveal__text" id="answerText"></p>
           </div>
         </div>
-        <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
-          <div class="progress-bar-fill" id="progressFill"></div>
+
+        <!-- Explanation banner (shared) -->
+        <div class="explanation" id="explanationBanner" hidden>
+          <span class="explanation__label">Explanation</span>
+          <p id="explanationText"></p>
         </div>
-      </section>
-
-      <!-- Quiz Container -->
-      <section class="quiz-container glass" id="quizContainer" aria-label="Practice question">
-
-        <div class="state-panel" id="loadingState">
-          <div class="loader-cube">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <p>Select your department and semester, then start practice.</p>
-        </div>
-
-        <div class="state-panel" id="emptyState" hidden>
-          <svg viewBox="0 0 24 24" fill="none" class="state-icon"><path d="M12 9v4M12 16.5h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <p id="emptyStateText">No questions were found for this Department / Semester combination yet.</p>
-        </div>
-
-        <div class="state-panel" id="errorState" hidden>
-          <svg viewBox="0 0 24 24" fill="none" class="state-icon"><path d="M12 8v5M12 16.5h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9.3" stroke="currentColor" stroke-width="1.6"/></svg>
-          <p id="errorStateText">Something went wrong while loading questions.</p>
-        </div>
-
-        <div class="quiz-content" id="quizContent" hidden>
-
-          <div class="question-block">
-            <span class="question-index" id="questionIndexLabel">Q1</span>
-            <h2 class="question-text" id="questionText"></h2>
-          </div>
-
-          <!-- MCQ grid -->
-          <div class="mcq-grid" id="mcqGrid" hidden></div>
-
-          <!-- Short answer -->
-          <div class="short-answer-block" id="shortBlock" hidden>
-            <label class="field-label" for="shortInput">Type your answer for practice</label>
-            <textarea id="shortInput" class="glass-input" rows="4" placeholder="Write your answer here — this is just for your own typing practice, it isn't graded automatically…"></textarea>
-
-            <button id="showAnswerBtn" class="btn-3d btn-secondary" type="button">
-              <svg viewBox="0 0 24 24" fill="none" class="btn-icon"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
-              <span>Show Answer</span>
-            </button>
-
-            <div class="answer-reveal" id="answerReveal" hidden>
-              <div class="reveal-section">
-                <h3>Model Answer</h3>
-                <p id="correctAnswerText"></p>
-              </div>
-              <div class="reveal-section">
-                <h4>Explanation</h4>
-                <p id="shortExplanationText"></p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Explanation banner for MCQ -->
-          <div class="explanation-banner" id="explanationBanner" hidden>
-            <span class="explanation-tag" id="explanationStatus">Correct</span>
-            <p id="explanationText"></p>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Navigation -->
-      <nav class="nav-controls" aria-label="Question navigation">
-        <button id="prevBtn" class="btn-3d btn-nav" type="button" disabled>
-          <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Previous</span>
-        </button>
-
-        <div class="nav-position" id="navPosition">0 / 0</div>
-
-        <button id="nextBtn" class="btn-3d btn-nav" type="button" disabled>
-          <span>Next</span>
-          <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </nav>
-
+      </div>
     </main>
 
-    <footer class="app-footer">
-      <p>Practice Box <span class="brand-chip small">[ PB ]</span> — crafted for focused, high-fidelity varsity exam practice.</p>
-    </footer>
+    <!-- ================= NAVIGATION ================= -->
+    <nav class="nav-bar glass" aria-label="Question navigation">
+      <button class="btn btn-3d btn-nav" id="prevBtn" type="button" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+        <span>Previous</span>
+      </button>
 
+      <span class="nav-counter" id="navCounter">0 / 0</span>
+
+      <button class="btn btn-3d btn-nav btn-nav--next" id="nextBtn" type="button" disabled>
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+    </nav>
+
+    <footer class="app-footer">
+      <p>Practice Box <span>[ PB ]</span> · Crafted for focused varsity practice</p>
+    </footer>
   </div>
 
-  <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
